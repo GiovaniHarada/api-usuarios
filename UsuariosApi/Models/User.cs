@@ -14,9 +14,8 @@ namespace UsuariosApi.Models
 
         [Required]
         public string Username { get; set; }
-        [JsonIgnore]
         [Required]
-        public string Password { get; set; }
+        public string Password { internal get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -26,6 +25,14 @@ namespace UsuariosApi.Models
         [JsonIgnore]
         public string Salt { get; set; }
         public string PasswordChangeToken { get; set; }
+
+
+    }
+
+    public class UpdateUser: User
+    {
+        [JsonIgnore]
+        new public string Password { get; set; }
 
 
     }

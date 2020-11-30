@@ -114,7 +114,7 @@ namespace UsuariosApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] User model)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUser model)
         {
             var guid = Guid.Parse(id);
 

@@ -122,7 +122,7 @@ namespace UsuariosApi.Business
                 return false;
             }
 
-            user.Password = model.NewPassword;
+            user.Password = model.Password;
 
             byte[] salt = new byte[128 / 8];
             using (var rng = RandomNumberGenerator.Create())
