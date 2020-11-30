@@ -62,10 +62,19 @@ namespace UsuariosApi.Business
         {
             return await userRepository.GetUserByUsername(username);
         }
+        public async Task<User> GetUserByGuid(Guid guid)
+        {
+            return await userRepository.GetUserByGuid(guid);
+        }
 
         public async Task<List<User>> GetUsers(int pageSize, int page)
         {
             return await userRepository.GetUsers(pageSize, page);
+        }
+
+        public async Task<bool> DeleteUser(Guid guid)
+        {
+            return await userRepository.Delete(guid);
         }
 
 
@@ -86,5 +95,54 @@ namespace UsuariosApi.Business
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<bool> UpdateUser(User user)
+        {
+            return await userRepository.Update(user);
+        }
+
+        public async Task<bool> UpdatePassword(User user)
+        {
+            return await userRepository.Update(user);
+        }
+
+        public async Task<bool> ResetPasswordToken(Guid guid)
+        {
+            string token = RandomString(5);
+
+            return await userRepository.AddUserPasswordToken(guid, token);
+        }
+
+        public async Task<bool> ChangePassword(ChangePassword model)
+        {
+            var user = await userRepository.GetUserByGuid(model.UserId);
+
+            if( model.Token != user.PasswordChangeToken)
+            {
+                return false;
+            }
+
+            user.Password = model.NewPassword;
+
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            user.Salt = Convert.ToBase64String(salt);
+            user.Password = user.GetPasswordHash();
+
+            return await userRepository.UpdatePassword(user);
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
     }
 }

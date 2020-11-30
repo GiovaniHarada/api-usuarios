@@ -12,5 +12,10 @@ namespace UsuariosApi.Business.Interfaces
         Task<string> AuthUser(string username, string password);
         Task<User> GetUserByUsername(string username);
         Task<List<User>> GetUsers(int pageSize, int page);
+        Task<bool> DeleteUser(Guid guid);
+        Task<User> GetUserByGuid(Guid guid);
+        Task<bool> UpdateUser(User user);
+        Task<bool> ResetPasswordToken(Guid guid);
+        Task<bool> ChangePassword(ChangePassword model);
     }
 }

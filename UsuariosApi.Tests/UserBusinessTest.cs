@@ -178,7 +178,6 @@ namespace UsuariosApi.Test
         [Fact]
         public void GetUsers()
         {
-            string username = "testUser";
 
             var returnUsers = new List<User>
             {
@@ -216,8 +215,6 @@ namespace UsuariosApi.Test
         [Fact]
         public void GetUsersNone()
         {
-            string username = "testUser";
-
             var returnUsers = new List<User>
             {
 

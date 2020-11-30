@@ -64,7 +64,12 @@ namespace UsuariosApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(string id)
         {
-            var user = await userBusiness.GetUserByUsername(id);
+            var guid = Guid.Parse(id);
+
+            if (guid == null)
+                return BadRequest();
+
+            var user = await userBusiness.GetUserByGuid(guid);
 
             if (user == null)
             {
@@ -88,5 +93,82 @@ namespace UsuariosApi.Controllers
 
             return Ok(new { Token = token });
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var guid = Guid.Parse(id);
+
+            if (guid == null)
+                return BadRequest();
+
+
+            var deleted = await userBusiness.DeleteUser(guid);
+
+            if (deleted)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] User model)
+        {
+            var guid = Guid.Parse(id);
+
+            if (guid == null)
+                return BadRequest();
+
+            model.UserId = guid;
+
+
+            var updated = await userBusiness.UpdateUser(model);
+
+            if (updated)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost("{id}/requestPasswordToken")]
+        public async Task<IActionResult> RequestPasswordToken(string id)
+        {
+            var guid = Guid.Parse(id);
+
+            if (guid == null)
+                return BadRequest();
+
+
+            var tokenCreated = await userBusiness.ResetPasswordToken(guid);
+
+            if (!tokenCreated)
+                return BadRequest();
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/changePassword")]
+        public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePassword model)
+        {
+            var guid = Guid.Parse(id);
+
+            if (guid == null)
+                return BadRequest();
+
+            model.UserId = guid;
+
+
+            var passwordChanged = await userBusiness.ChangePassword(model);
+
+            if (!passwordChanged)
+                return BadRequest();
+
+            return Ok();
+        }
+
     }
 }

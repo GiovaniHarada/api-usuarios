@@ -25,6 +25,7 @@ namespace UsuariosApi.Models
         public int AccessLevel { get; set; }
         [JsonIgnore]
         public string Salt { get; set; }
+        public string PasswordChangeToken { get; set; }
 
 
     }
