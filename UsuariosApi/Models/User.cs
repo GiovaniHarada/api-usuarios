@@ -50,22 +50,15 @@ namespace UsuariosApi.Models
         {
             var salt = Convert.FromBase64String(user.Salt);
 
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: user.Password,
-            salt: salt,
-            prf: KeyDerivationPrf.HMACSHA1,
-            iterationCount: 10000,
-            numBytesRequested: 256 / 8));
-
             string enteredHashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: user.Password,
+            password: enteredPassword,
             salt: salt,
             prf: KeyDerivationPrf.HMACSHA1,
             iterationCount: 10000,
             numBytesRequested: 256 / 8));
 
 
-            return hashed == enteredHashed;
+            return user.Password == enteredHashed;
         }
     }
 
